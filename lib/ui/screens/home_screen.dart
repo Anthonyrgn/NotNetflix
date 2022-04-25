@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_netflix_flutter/models/movie.dart';
+import 'package:my_netflix_flutter/repositories/data_repository.dart';
+import 'package:my_netflix_flutter/services/api_service.dart';
 import 'package:my_netflix_flutter/utils/constant.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -10,8 +14,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    final dataProvider = Provider.of<DataRepository>(context);
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
@@ -23,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             height: 500,
             color: Colors.red,
+            child: dataProvider.popularMovieList.isEmpty ? const Center() : Image.network(dataProvider.popularMovieList[0].posterURL(), fit: BoxFit.cover),
           ),
           const SizedBox(height: 15),
           Text("Tendances actuelles", style: GoogleFonts.poppins(
@@ -39,9 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 margin: const EdgeInsets.only(right: 8),
                 width: 110,
                 color: Colors.yellow,
-                child: Center(
+                child: dataProvider.popularMovieList.isEmpty ? Center(
                   child: Text(index.toString()),
-                  ),
+                  ) : Image.network(dataProvider.popularMovieList[index].posterURL(), fit: BoxFit.cover),
                 );
               }
             ),
